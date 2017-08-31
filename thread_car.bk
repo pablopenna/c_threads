@@ -1,0 +1,90 @@
+#include<pthread.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<unistd.h>
+#define n_coches 8
+
+
+
+
+	char* string_generator(int str_len)
+	/*arg= string's lenght*/
+	{
+		char* final_string="UnInitialized";//[str_len+1];
+		char aux;
+		int random[str_len];//[A-Z] in ASCII=[65-90]
+		int j;
+
+		for(j=0;j<str_len;j++)
+		{
+			random[j]=(rand()%25)+65;//random=random int from 65 to 90
+			aux=random[j];
+			strcpy(&final_string[j],&aux);
+		}
+		strcpy(&final_string[str_len],"\0");
+		//printf("%s\n",final_string);
+		return final_string;
+}
+
+
+
+
+// Array para los id en t if i ca do r es de los hilos
+	pthread_t tabla_hilos [n_coches];
+
+// Tipo de datos hilos_param
+	typedef struct {
+		int id ;
+		char* cadena;
+	} hilos_param;
+
+// Array de datos de tipo hilos_param	
+	hilos_param parametros [n_coches];
+
+// Funcion ejecutada por los hilos
+	void * funcion_coches (void * arg)
+	{
+		hilos_param *p;
+		p=(hilos_param *) arg;
+		
+		int aleatorio ;
+		printf("Salida >%s >%d \n",p->cadena, p->id);
+		fflush(stdout);
+		aleatorio=rand();
+		sleep(1 +( aleatorio%4));
+		printf("Llegada >%s >%d \n",p->cadena, p->id);
+		/* CODE 2 */
+		pthread_exit(0);
+		/*End of CODE 2*/
+	}
+	int main (void)
+	{
+		int i , * res ;
+		printf("Inicio del proceso de creación de los hilos...\n");
+		
+		// Se procede a crear los hilos
+		for(i=0;i<n_coches;i++)
+		{
+			/* CODE 1 */
+			hilos_param p;
+			p.id=i;
+			p.cadena=string_generator(6);/*arbitrary value, length of the
+			string*/
+			pthread_create(&tabla_hilos[i],NULL,funcion_coches,&p);
+			/*End of CODE 1*/
+		}
+		
+		printf("Proceso de creacion de hilos terminado\n");
+		printf("SALIDA DE COCHES\n");
+
+		for (i=0; i < n_coches ; i ++)
+		{
+			/* CODE 3 */
+			pthread_join(tabla_hilos[i],NULL);
+			/*End of CODE 3*/
+		}
+
+		printf ("Todos los coches han LLEGADO A LA META\n");
+		return 0;
+	}

@@ -1,0 +1,50 @@
+#include<pthread.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define n_coches 8
+
+// Array para los id en t if i ca do r es de los hilos
+	pthread_t tabla_hilos [n_coches];
+
+// Tipo de datos hilos_param
+	typedef struct {
+		int id ;
+		char * cadena;
+	} hilos_param;
+
+// Array de datos de tipo hilos_param	
+	hilos_param parametros [n_coches];
+// Funcion ejecutada por los hilos
+	void * funcion_coches (hilos_param * p)
+	{
+		int aleatorio ;
+		printf("Salida >%s >%d \n", p->cadena , p->id);
+		fflush(stdout);
+		aleatorio=rand();
+		sleep(1 +( aleatorio%4));
+		printf("Llegada >%s >%d \n", p->cadena , p->id);
+		/* CODIGO 2 */
+	}
+	int main (void)
+	{
+		int i , * res ;
+		printf("Inicio del proceso de creación de los hilos...\n");
+		
+		// Se procede a crear los hilos
+		for(i=0;i<n_coches;i++)
+		{
+			/* CODIGO 1 */
+		}
+		
+		printf("Proceso de creacion de hilos terminado\n");
+		printf("SALIDA DE COCHES\n");
+
+		for (i=0; i < n_coches ; i ++)
+		{
+			/* CODIGO 3 */
+		}
+
+		printf ("Todos los coches han LLEGADO A LA META\n");
+		return 0;
+	}
